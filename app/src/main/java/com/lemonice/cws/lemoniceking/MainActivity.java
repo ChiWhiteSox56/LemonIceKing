@@ -16,24 +16,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lemonice.cws.lemoniceking.db.FlavorContract;
-import com.lemonice.cws.lemoniceking.db.FlavorDbHelper;
+import com.lemonice.cws.lemoniceking.db.FlavorDbOpenHelper;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+
+// The FlavorContract class defines constants which are used to access the data in the database
+// The helper class FlavorDbOpenHelper opens the database
+
+public class  MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private FlavorDbHelper mHelper;
+    private FlavorDbOpenHelper mOpenHelper;
     private ListView mFlavorListView;
     private ArrayAdapter<String> mAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mHelper = new FlavorDbHelper(this);
+        mOpenHelper = new FlavorDbOpenHelper(this);
         mFlavorListView = (ListView) findViewById(R.id.list_flavors);
 
         updateUI();
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String flavor = String.valueOf(flavorEditText.getText());
-                                SQLiteDatabase db = mHelper.getWritableDatabase();
+                                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
                                 ContentValues values = new ContentValues();
                                 values.put(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE, flavor);
                                 db.insertWithOnConflict(FlavorContract.FlavorEntry.TABLE,
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         View parent = (View) view.getParent();
         TextView flavorTextView = (TextView) parent.findViewById(R.id.name_flavor);
         String flavor = String.valueOf(flavorTextView.getText());
-        SQLiteDatabase db = mHelper.getWritableDatabase();
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         db.delete(FlavorContract.FlavorEntry.TABLE,
                 FlavorContract.FlavorEntry.COL_FLAVOR_TITLE + " = ?",
                 new String[]{flavor});
@@ -94,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI() {
         ArrayList<String> flavorList = new ArrayList<>();
-        SQLiteDatabase db = mHelper.getReadableDatabase();
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         Cursor cursor = db.query(FlavorContract.FlavorEntry.TABLE,
-                new String[]{FlavorContract.FlavorEntry._ID, FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
+                new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             int idx = cursor.getColumnIndex(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE);

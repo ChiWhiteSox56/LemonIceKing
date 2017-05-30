@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add_flavor"
-        android:icon="@android:drawable/ic_menu_add"
         android:title="Add Flavor"
-        app:showAsAction="always" />
+        app:showAsAction="collapseActionView"/>
+    <item
+        android:id="@+id/action_delete_flavor"
+        android:title="Delete Flavor"
+        app:showAsAction="collapseActionView" />
 </menu>

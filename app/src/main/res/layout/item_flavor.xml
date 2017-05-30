@@ -3,22 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <TextView
         android:id="@+id/name_flavor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:text="Peanut Butter"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_alignBottom="@+id/checkBox2" />
 
     <CheckBox
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/flavor_delete"/>
+        android:layout_alignParentRight="true"
+        android:id="@+id/checkBox2" />
+        <!--android:layout_toLeftOf="@+id/flavor_delete"-->
 
+
+    <!--
     <Button
         android:id="@+id/flavor_delete"
         android:layout_width="wrap_content"
@@ -26,7 +32,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="Done"
+        android:text="Delete"
         android:onClick="deleteFlavor"/>
+        -->
 
 </RelativeLayout>
