@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_suggest_flavor"
+        android:title="What Flavor Should I Try Today?"
+        app:showAsAction="collapseActionView"/>
+    <item
         android:id="@+id/action_add_flavor"
         android:title="Add Flavor"
         app:showAsAction="collapseActionView"/>

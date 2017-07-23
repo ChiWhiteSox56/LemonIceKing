@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Lemon Ice King Flavors</string>
+    <string name="sample_flavor_text">Long sample flavor text</string>
 </resources>

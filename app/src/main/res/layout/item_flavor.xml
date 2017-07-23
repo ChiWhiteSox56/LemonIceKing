@@ -3,25 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingRight="16dp" >
 
-    <TextView
-        android:id="@+id/name_flavor"
-        android:layout_width="wrap_content"
+    <CheckedTextView
+        android:id="@+id/simple_checked_text_view"
+        android:padding="16dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Peanut Butter"
+        android:text="@string/sample_flavor_text"
         android:textSize="20sp"
-        android:layout_alignBottom="@+id/checkBox2" />
+        android:checkMark="@mipmap/checked"
+        android:checked="false"
+        android:gravity="center"/>
 
-    <CheckBox
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:id="@+id/checkBox2" />
-        <!--android:layout_toLeftOf="@+id/flavor_delete"-->
+    <!--android:layout_toLeftOf="@+id/flavor_delete"-->
 
 
     <!--
