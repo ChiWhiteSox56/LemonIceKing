@@ -1,5 +1,6 @@
 package com.lemonice.cws.lemoniceking.ui;
 
+import android.app.ListActivity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import com.lemonice.cws.lemoniceking.R;
 import com.lemonice.cws.lemoniceking.adapters.FlavorAdapter;
 import com.lemonice.cws.lemoniceking.db.FlavorContract;
 import com.lemonice.cws.lemoniceking.db.FlavorDbOpenHelper;
+import com.lemonice.cws.lemoniceking.flavor.Flavor;
 
 import java.util.ArrayList;
 
@@ -22,37 +24,44 @@ import java.util.ArrayList;
 // The FlavorContract class defines constants which are used to access the data in the database
 // The helper class FlavorDbOpenHelper opens the database
 
-public class  MainActivity extends AppCompatActivity {
+public class  MainActivity extends ListActivity {
 
-    private static final String TAG = "MainActivity";
-    private static final String KEY_FLAVORTEXT = "sp_key_flavortext";
-    private static final String KEY_ISCHECKED = "sp_key_ischecked";
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private static final String KEY_CHECKED = "sp_key_checked";
+
     private FlavorDbOpenHelper mOpenHelper;
 
-    private ListView mFlavorListView;
-    private CheckedTextView mCheckedTextView;
+    private Flavor[] mFlavors;
     private FlavorAdapter mFlavorAdapter;
 
     private static final String PREFS_FILE = "com.lemonice.cws.lemoniceking.preferences";
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mOpenHelper = new FlavorDbOpenHelper(this);
-
-        // initiate a ListView
-        mFlavorListView = (ListView) findViewById(R.id.listView);
-
-        // initiate a SharedPreferences object and a SharedPrefrences editor
+        // initiate a SharedPreferences object and a SharedPreferences editor
         mSharedPreferences = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
 
-        // create adapter and populate list in UpdateUI()
-        updateUI();
+        mOpenHelper = new FlavorDbOpenHelper(this);
+
+        // initialize flavor list
+        mFlavors = new Flavor[getFlavorListFromDatabase().size()];
+
+        ArrayList<String> h = getFlavorListFromDatabase();
+
+        int isChecked = 0;
+        for (int i = 0; i < mFlavors.length; i++) {
+            //isChecked = mSharedPreferences.getInt(KEY_CHECKED, 0);
+            mFlavors[i] = new Flavor(h.get(i).toString(), isChecked);
+        }
+
+        mFlavorAdapter = new FlavorAdapter(this, mFlavors);
+        setListAdapter(mFlavorAdapter);
     }
 
     @Override
@@ -66,8 +75,10 @@ public class  MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        mEditor.putString(KEY_FLAVORTEXT, mCheckedTextView.getText().toString());
-        mEditor.putBoolean(KEY_ISCHECKED, mCheckedTextView.isChecked());
+        //for (int i = 0; i < mFlavors.length; i++) {
+            //mEditor.putBoolean(KEY_CHECKED, ; // GET VALUE OF CHECKMARK FOR EACH ROW
+        //}
+
         mEditor.commit();
     }
 
@@ -120,7 +131,7 @@ public class  MainActivity extends AppCompatActivity {
     }
 */
 
-
+/*
     private void updateUI() {
         ArrayList<String> flavorList = new ArrayList<>(); // flavorList is Array List stat stores list of flavors retrieved from database
         SQLiteDatabase db = mOpenHelper.getReadableDatabase(); // db is the database; mOpenHelper is an instance of the class that opens the database
@@ -132,10 +143,13 @@ public class  MainActivity extends AppCompatActivity {
             flavorList.add(cursor.getString(idx));
         }
 
+        for (String f : flavorList) {
+            System.out.println(f);
+        }
+
         if (mFlavorAdapter == null) { // if adapter is empty, create new adapter
             mFlavorAdapter = new FlavorAdapter(getApplicationContext(), flavorList);
-            mFlavorListView.setAdapter(mFlavorAdapter);
-            System.out.println("Wait here");
+            setListAdapter(mFlavorAdapter);
         } else {
             //mFlavorAdapter.clear();
             //mFlavorAdapter.addAll(flavorList);
@@ -145,7 +159,25 @@ public class  MainActivity extends AppCompatActivity {
         cursor.close();
         db.close();
     }
+*/
 
+// get the list of flavors from the allFlavors.db database
+    private ArrayList<String> getFlavorListFromDatabase() {
+        ArrayList<String> flavorList = new ArrayList<>(); // flavorList is Array List stat stores list of flavors retrieved from database
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase(); // db is the database; mOpenHelper is an instance of the class that opens the database
+        Cursor cursor = db.query(FlavorContract.FlavorEntry.TABLE, // flavorContract class defines constants which are used to access the data in the database
+                new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) { // cursor iterates through database
+            int idx = cursor.getColumnIndex(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE);
+            flavorList.add(cursor.getString(idx));
+        }
+
+        cursor.close();
+        db.close();
+
+        return flavorList;
+    }
 
 
 }

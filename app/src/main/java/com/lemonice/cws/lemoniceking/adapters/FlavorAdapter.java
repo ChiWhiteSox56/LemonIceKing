@@ -1,15 +1,19 @@
 package com.lemonice.cws.lemoniceking.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.TextView;
 
 import com.lemonice.cws.lemoniceking.R;
+import com.lemonice.cws.lemoniceking.flavor.Flavor;
 import com.lemonice.cws.lemoniceking.ui.MainActivity;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -17,26 +21,24 @@ import java.util.ArrayList;
  * Created by cindymichalowski on 7/22/17.
  */
 
-public class FlavorAdapter<String> extends BaseAdapter {
+public class FlavorAdapter extends BaseAdapter {
 
-    Context mContext;
-    ArrayList<String> mFlavors;
-    LayoutInflater inflater;
+    private final Context mContext;
+    private final Flavor[] mFlavors;
 
-    public FlavorAdapter(Context context, ArrayList<String> flavors) {
+    public FlavorAdapter(Context context, Flavor[] flavors) {
         mContext = context;
         mFlavors = flavors;
-        inflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public int getCount() {
-        return mFlavors.size();
+        return mFlavors.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return mFlavors[position];
     }
 
     // can be used to tag items for easy reference; currently not using
@@ -46,32 +48,41 @@ public class FlavorAdapter<String> extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        view = inflater.inflate(R.layout.item_flavor, null);
-        final CheckedTextView simpleCheckedTextView = (CheckedTextView) view.findViewById(R.id.simple_checked_text_view);
-        simpleCheckedTextView.setText(mFlavors.get(position).toString());
-        simpleCheckedTextView.setChecked(false);
-        simpleCheckedTextView.setCheckMarkDrawable(0);
+        final ViewHolder holder;
 
-        // perform on Click Event Listener on CheckedTextview
-        simpleCheckedTextView.setOnClickListener(new View.OnClickListener() {
+        // if convertView is null, it must be set to a view
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_flavor, null);
 
-            @Override
-            public void onClick(View v) {
-                if (simpleCheckedTextView.isChecked()) {
-                    // set checkmark drawable and set checked to false
-                    simpleCheckedTextView.setCheckMarkDrawable(0);
-                    simpleCheckedTextView.setChecked(false);
+            holder = new ViewHolder();
+            holder.flavorLabel = (TextView) convertView.findViewById(R.id.flavorLabel);
+            holder.flavorCheckbox = (CheckBox) convertView.findViewById(R.id.flavorCheckbox);
 
-                } else {
-                    // set checkmark drawable and set checked to false
-                    simpleCheckedTextView.setCheckMarkDrawable(R.mipmap.checked);
-                    simpleCheckedTextView.setChecked(true);
-                }
-            }
-        });
-        return view;
+            convertView.setTag(holder);
+
+        } else {
+            // if ConvertView is not null, we just need to get the holder from convertView
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.flavorLabel.setText(mFlavors[position].getLabel());
+
+        if (mFlavors[position].getValue() == 1) {
+            holder.flavorCheckbox.setChecked(true);
+        } else {
+            holder.flavorCheckbox.setChecked(false);
+        }
+
+        // perform on ClickListener when I integrate custom drawable instead of checkmark (see ScoreCard app)
+
+        return convertView;
     }
 
+    // need a ViewHolder class to hold the views; need variables for each view in item_flavor.xml
+    private class ViewHolder {
+        TextView flavorLabel;
+        CheckBox flavorCheckbox;
+    }
 }

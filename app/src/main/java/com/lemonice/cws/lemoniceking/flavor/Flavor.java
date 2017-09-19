@@ -6,22 +6,27 @@ package com.lemonice.cws.lemoniceking.flavor;
 
 public class Flavor {
 
-    private String mFlavor;
-    private Boolean mIsChecked;
+    private String mLabel;
+    private int mValue;
 
-    public String getFlavor() {
-        return mFlavor;
+    public Flavor(String label, int value) {
+        mLabel = label;
     }
 
-    public void setFlavor(String flavor) {
-        mFlavor = flavor;
+    public String getLabel() {
+        return mLabel;
     }
 
-    public Boolean getChecked() {
-        return mIsChecked;
+    public void setLabel(String label) {
+        mLabel = label;
     }
 
-    public void setChecked(Boolean checked) {
-        mIsChecked = checked;
+    public int getValue() {
+        return mValue;
     }
+
+    public void setValue(int value) {
+        mValue = value;
+    }
+
 }
