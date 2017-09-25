@@ -1,6 +1,7 @@
 package com.lemonice.cws.lemoniceking.ui;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 // The FlavorContract class defines constants which are used to access the data in the database
 // The helper class FlavorDbOpenHelper opens the database
 
-public class  MainActivity extends ListActivity {
+public class MainActivity extends ListActivity {
 
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -44,7 +45,7 @@ public class  MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         // initiate a SharedPreferences object and a SharedPreferences editor
-        mSharedPreferences = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
 
         mOpenHelper = new FlavorDbOpenHelper(this);
@@ -54,10 +55,10 @@ public class  MainActivity extends ListActivity {
 
         ArrayList<String> h = getFlavorListFromDatabase();
 
-        int isChecked = 0;
+        boolean isChecked = false;
         for (int i = 0; i < mFlavors.length; i++) {
-            //isChecked = mSharedPreferences.getInt(KEY_CHECKED, 0);
-            mFlavors[i] = new Flavor(h.get(i).toString(), isChecked);
+            isChecked = mSharedPreferences.getBoolean(KEY_CHECKED + i, false);
+            mFlavors[i] = new Flavor(h.get(i), isChecked);
         }
 
         mFlavorAdapter = new FlavorAdapter(this, mFlavors);
@@ -75,11 +76,12 @@ public class  MainActivity extends ListActivity {
     protected void onPause() {
         super.onPause();
 
-        //for (int i = 0; i < mFlavors.length; i++) {
-            //mEditor.putBoolean(KEY_CHECKED, ; // GET VALUE OF CHECKMARK FOR EACH ROW
-        //}
+        for (int i = 0; i < mFlavors.length; i++) {
+            // make different keys for SharedPreferences to store different values KEY_CHECKED0, KEY_CHECKED1, etc.)
+            mEditor.putBoolean(KEY_CHECKED + i, mFlavors[i].getValue()); // GET VALUE OF CHECKBOX FOR EACH ROW
+        }
 
-        mEditor.commit();
+        mEditor.apply();
     }
 
     /* UNCOMMENT AFTER SHARED PREFERENCES ARE FIXED

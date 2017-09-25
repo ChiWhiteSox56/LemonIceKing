@@ -7,10 +7,12 @@ package com.lemonice.cws.lemoniceking.flavor;
 public class Flavor {
 
     private String mLabel;
-    private int mValue;
+    private boolean mValue;
 
-    public Flavor(String label, int value) {
+    public Flavor(String label, boolean value) {
+
         mLabel = label;
+        mValue = value;
     }
 
     public String getLabel() {
@@ -21,11 +23,11 @@ public class Flavor {
         mLabel = label;
     }
 
-    public int getValue() {
+    public boolean getValue() {
         return mValue;
     }
 
-    public void setValue(int value) {
+    public void setValue(boolean value) {
         mValue = value;
     }
 

@@ -1,12 +1,14 @@
 package com.lemonice.cws.lemoniceking.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.lemonice.cws.lemoniceking.R;
@@ -48,7 +50,7 @@ public class FlavorAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         final ViewHolder holder;
 
@@ -69,7 +71,16 @@ public class FlavorAdapter extends BaseAdapter {
 
         holder.flavorLabel.setText(mFlavors[position].getLabel());
 
-        if (mFlavors[position].getValue() == 1) {
+        holder.flavorCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mFlavors[position].setValue(isChecked);
+            }
+        });
+
+        // set checkbox state explicitly so random checkboxes are not checked/unchecked when scrolling
+        // https://stackoverflow.com/questions/14468852/android-listview-the-checkbox-change-randomik7v cwa`
+        if (mFlavors[position].getValue() == true) {
             holder.flavorCheckbox.setChecked(true);
         } else {
             holder.flavorCheckbox.setChecked(false);
