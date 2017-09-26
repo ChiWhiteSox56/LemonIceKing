@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_suggest_flavor"
-        android:title="What Flavor Should I Try Today?"
+        android:title="Flavor Suggestion Generator"
         app:showAsAction="collapseActionView"/>
+    <!--
     <item
         android:id="@+id/action_add_flavor"
         android:title="Add Flavor"
@@ -13,4 +14,5 @@
         android:id="@+id/action_delete_flavor"
         android:title="Delete Flavor"
         app:showAsAction="collapseActionView" />
+    -->
 </menu>

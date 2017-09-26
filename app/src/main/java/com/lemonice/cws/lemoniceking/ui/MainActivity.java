@@ -1,17 +1,26 @@
 package com.lemonice.cws.lemoniceking.ui;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.lemonice.cws.lemoniceking.R;
 import com.lemonice.cws.lemoniceking.adapters.FlavorAdapter;
@@ -20,6 +29,8 @@ import com.lemonice.cws.lemoniceking.db.FlavorDbOpenHelper;
 import com.lemonice.cws.lemoniceking.flavor.Flavor;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 // The FlavorContract class defines constants which are used to access the data in the database
@@ -84,35 +95,41 @@ public class MainActivity extends ListActivity {
         mEditor.apply();
     }
 
-    /* UNCOMMENT AFTER SHARED PREFERENCES ARE FIXED
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_add_flavor:
-                final EditText flavorEditText = new EditText(this);
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("Add a New Flavor")
-                        .setMessage("Enter the name of the new flavor:")
-                        .setView(flavorEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String flavor = String.valueOf(flavorEditText.getText());
-                                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-                                ContentValues values = new ContentValues();
-                                values.put(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE, flavor);
-                                db.insertWithOnConflict(FlavorContract.FlavorEntry.TABLE,
-                                        null,
-                                        values,
-                                        SQLiteDatabase.CONFLICT_REPLACE);
-                                db.close();
-                                updateUI();
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
+            case R.id.action_suggest_flavor:
 
+                // initialize a new Alert dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                // specify the alert dialog title
+                builder.setTitle("Today's suggested flavor is ...");
+
+                String generatedFlavor = flavorGenerator() + "!";
+
+                // initialize a new TextView instance for the generated flavor
+                final TextView suggestedFlavorTextView = new TextView(this);
+                suggestedFlavorTextView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                suggestedFlavorTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                suggestedFlavorTextView.setText(generatedFlavor);
+                suggestedFlavorTextView.setTextSize(24);
+                suggestedFlavorTextView.setPadding(16, 60, 16, 0);
+                builder.setView(suggestedFlavorTextView);
+
+                builder.setPositiveButton("Let's do it!", null)
+                .setNeutralButton("Nah, try again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        flavorGenerator();
+                    }
+                })
+                .create();
+
+
+                AlertDialog dialog = builder.create();
                 dialog.show();
+
                 return true;
 
             default:
@@ -120,18 +137,20 @@ public class MainActivity extends ListActivity {
         }
     }
 
-    public void deleteFlavor(View view) {
-        View parent = (View) view.getParent();
-        TextView flavorTextView = (TextView) parent.findViewById(R.id.name_flavor);
-        String flavor = String.valueOf(flavorTextView.getText());
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        db.delete(FlavorContract.FlavorEntry.TABLE,
-                FlavorContract.FlavorEntry.COL_FLAVOR_TITLE + " = ?",
-                new String[]{flavor});
-        db.close();
-        updateUI();
+    public String flavorGenerator() {
+
+        // create a list of all unchecked flavor names
+        List<String> uncheckedFlavors = new ArrayList<String>();
+        for (int i = 0; i < mFlavors.length; i++) {
+            if (mFlavors[i].getValue() == false) {
+                uncheckedFlavors.add(mFlavors[i].getLabel());
+            }
+        }
+
+        // generate a random number between 1 and uncheckedFlavors.size()
+        Random rand = new Random();
+        return uncheckedFlavors.get(rand.nextInt(uncheckedFlavors.size()));
     }
-*/
 
 /*
     private void updateUI() {
@@ -180,6 +199,55 @@ public class MainActivity extends ListActivity {
 
         return flavorList;
     }
+
+    /*
+     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_flavor:
+                final EditText flavorEditText = new EditText(this);
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle("Add a New Flavor")
+                        .setMessage("Enter the name of the new flavor:")
+                        .setView(flavorEditText)
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String flavor = String.valueOf(flavorEditText.getText());
+                                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                values.put(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE, flavor);
+                                db.insertWithOnConflict(FlavorContract.FlavorEntry.TABLE,
+                                        null,
+                                        values,
+                                        SQLiteDatabase.CONFLICT_REPLACE);
+                                db.close();
+                                updateUI();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+
+                dialog.show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void deleteFlavor(View view) {
+        View parent = (View) view.getParent();
+        TextView flavorTextView = (TextView) parent.findViewById(R.id.name_flavor);
+        String flavor = String.valueOf(flavorTextView.getText());
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        db.delete(FlavorContract.FlavorEntry.TABLE,
+                FlavorContract.FlavorEntry.COL_FLAVOR_TITLE + " = ?",
+                new String[]{flavor});
+        db.close();
+        updateUI();
+    }
+     */
 
 
 }
