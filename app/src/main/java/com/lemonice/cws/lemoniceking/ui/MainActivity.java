@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
@@ -101,33 +102,42 @@ public class MainActivity extends ListActivity {
             case R.id.action_suggest_flavor:
 
                 // initialize a new Alert dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 // specify the alert dialog title
                 builder.setTitle("Today's suggested flavor is ...");
-
-                String generatedFlavor = flavorGenerator() + "!";
 
                 // initialize a new TextView instance for the generated flavor
                 final TextView suggestedFlavorTextView = new TextView(this);
                 suggestedFlavorTextView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 suggestedFlavorTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-                suggestedFlavorTextView.setText(generatedFlavor);
+                suggestedFlavorTextView.setText(flavorGenerator() + "!");
                 suggestedFlavorTextView.setTextSize(24);
                 suggestedFlavorTextView.setPadding(16, 60, 16, 0);
                 builder.setView(suggestedFlavorTextView);
 
-                builder.setPositiveButton("Let's do it!", null)
-                .setNeutralButton("Nah, try again", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        flavorGenerator();
-                    }
-                })
-                .create();
-
+                builder.setPositiveButton("Let's do it!", null);
+                builder.setNeutralButton("Nah, try again", null);
 
                 AlertDialog dialog = builder.create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+
+                        Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
+                        button.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+
+                                suggestedFlavorTextView.setText(flavorGenerator() + "!");
+                            }
+                        });
+                    }
+                });
+
                 dialog.show();
 
                 return true;
