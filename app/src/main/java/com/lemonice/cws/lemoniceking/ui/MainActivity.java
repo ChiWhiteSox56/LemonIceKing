@@ -197,8 +197,10 @@ public class MainActivity extends ListActivity {
         ArrayList<String> flavorList = new ArrayList<>(); // flavorList is Array List stat stores list of flavors retrieved from database
         SQLiteDatabase db = mOpenHelper.getReadableDatabase(); // db is the database; mOpenHelper is an instance of the class that opens the database
         Cursor cursor = db.query(FlavorContract.FlavorEntry.TABLE, // flavorContract class defines constants which are used to access the data in the database
-                new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
-                null, null, null, null, null);
+                //new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
+                //null, null, null, null, null);
+                new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE}, null, null, null, null, FlavorContract.FlavorEntry.COL_FLAVOR_NUM_ORDER);
+
         while (cursor.moveToNext()) { // cursor iterates through database
             int idx = cursor.getColumnIndex(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE);
             flavorList.add(cursor.getString(idx));

@@ -11,13 +11,15 @@ import android.provider.BaseColumns;
 
 public class FlavorContract {
 
-    public static final String DB_NAME = "allFlavors.db";
+    public static final String DB_NAME = "allFlavorsMod.db";
     public static final int DB_VERSION = 1;
 
     public class FlavorEntry implements BaseColumns {
 
         public static final String TABLE = "LEMONICEKING";
         public static final String COL_FLAVOR_TITLE = "FLAVOR";
+        public static final String COL_FLAVOR_DRAWABLE = "DRAWABLE";
+        public static final String COL_FLAVOR_NUM_ORDER = "NUM_ORDER";
 
     }
 }
