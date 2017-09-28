@@ -110,10 +110,10 @@ public class MainActivity extends ListActivity {
                 // initialize a new TextView instance for the generated flavor
                 final TextView suggestedFlavorTextView = new TextView(this);
                 suggestedFlavorTextView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                suggestedFlavorTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                suggestedFlavorTextView.setGravity(Gravity.CENTER);
                 suggestedFlavorTextView.setText(flavorGenerator() + "!");
                 suggestedFlavorTextView.setTextSize(24);
-                suggestedFlavorTextView.setPadding(16, 60, 16, 0);
+                suggestedFlavorTextView.setPadding(16, 32, 16, 32);
                 builder.setView(suggestedFlavorTextView);
 
                 builder.setPositiveButton("Let's do it!", null);
