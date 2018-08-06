@@ -19,10 +19,6 @@ public class Flavor {
         return mLabel;
     }
 
-    public void setLabel(String label) {
-        mLabel = label;
-    }
-
     public boolean getValue() {
         return mValue;
     }

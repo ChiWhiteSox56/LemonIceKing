@@ -162,43 +162,14 @@ public class MainActivity extends ListActivity {
         return uncheckedFlavors.get(rand.nextInt(uncheckedFlavors.size()));
     }
 
-/*
-    private void updateUI() {
-        ArrayList<String> flavorList = new ArrayList<>(); // flavorList is Array List stat stores list of flavors retrieved from database
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase(); // db is the database; mOpenHelper is an instance of the class that opens the database
-        Cursor cursor = db.query(FlavorContract.FlavorEntry.TABLE, // flavorContract class defines constants which are used to access the data in the database
-                new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
-                null, null, null, null, null);
-        while (cursor.moveToNext()) { // cursor iterates through database
-            int idx = cursor.getColumnIndex(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE);
-            flavorList.add(cursor.getString(idx));
-        }
 
-        for (String f : flavorList) {
-            System.out.println(f);
-        }
-
-        if (mFlavorAdapter == null) { // if adapter is empty, create new adapter
-            mFlavorAdapter = new FlavorAdapter(getApplicationContext(), flavorList);
-            setListAdapter(mFlavorAdapter);
-        } else {
-            //mFlavorAdapter.clear();
-            //mFlavorAdapter.addAll(flavorList);
-            //mFlavorAdapter.notifyDataSetChanged();
-        }
-
-        cursor.close();
-        db.close();
-    }
-*/
-
-// get the list of flavors from the allFlavors.db database
+    // get the list of flavors from the allFlavors.db database
     private ArrayList<String> getFlavorListFromDatabase() {
-        ArrayList<String> flavorList = new ArrayList<>(); // flavorList is Array List stat stores list of flavors retrieved from database
+        ArrayList<String> flavorList = new ArrayList<>(); // flavorList is Array List that stores list of flavors retrieved from database
         SQLiteDatabase db = mOpenHelper.getReadableDatabase(); // db is the database; mOpenHelper is an instance of the class that opens the database
-        Cursor cursor = db.query(FlavorContract.FlavorEntry.TABLE, // flavorContract class defines constants which are used to access the data in the database
-                //new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE},
-                //null, null, null, null, null);
+
+        // flavorContract class defines constants which are used to access the data in the database
+        Cursor cursor = db.query(FlavorContract.FlavorEntry.TABLE,
                 new String[]{FlavorContract.FlavorEntry.COL_FLAVOR_TITLE}, null, null, null, null, FlavorContract.FlavorEntry.COL_FLAVOR_NUM_ORDER);
 
         while (cursor.moveToNext()) { // cursor iterates through database
@@ -210,56 +181,6 @@ public class MainActivity extends ListActivity {
         db.close();
 
         return flavorList;
+
     }
-
-    /*
-     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_flavor:
-                final EditText flavorEditText = new EditText(this);
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("Add a New Flavor")
-                        .setMessage("Enter the name of the new flavor:")
-                        .setView(flavorEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String flavor = String.valueOf(flavorEditText.getText());
-                                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-                                ContentValues values = new ContentValues();
-                                values.put(FlavorContract.FlavorEntry.COL_FLAVOR_TITLE, flavor);
-                                db.insertWithOnConflict(FlavorContract.FlavorEntry.TABLE,
-                                        null,
-                                        values,
-                                        SQLiteDatabase.CONFLICT_REPLACE);
-                                db.close();
-                                updateUI();
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
-
-                dialog.show();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void deleteFlavor(View view) {
-        View parent = (View) view.getParent();
-        TextView flavorTextView = (TextView) parent.findViewById(R.id.name_flavor);
-        String flavor = String.valueOf(flavorTextView.getText());
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        db.delete(FlavorContract.FlavorEntry.TABLE,
-                FlavorContract.FlavorEntry.COL_FLAVOR_TITLE + " = ?",
-                new String[]{flavor});
-        db.close();
-        updateUI();
-    }
-     */
-
-
 }
